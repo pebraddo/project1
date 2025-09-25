@@ -17,33 +17,79 @@ str(census_info, max.level = 1)
 
 ```{r}
 library(jsonlite)
-parsed <- fromJSON(rawToChar(census_info$content))
-content_info <- as_tibble(parsed)
-colnames(content_info) <- c('SEX', 'PWGTP', 'MAR', 'SCHL')
-content_info <- content_info[-1,]
-content_info
+library(httr)
+parsing_fun <- function(response) {
+  parsed <- fromJSON(rawToChar(census_info$content))
+  content_info <- as_tibble(parsed)
+  colnames(content_info) <- content_info[1,]
+  content_info <- content_info[-1,]
+  content_info
+}
 ```
 
 ```{r}
-user_changes <- function(x=2022, num_var=c('AGEP','PWGTP'), cat_var='SEX', geo_level='All') {
-  if (is.numeric(x))
-    if (x %in% (2010:2022))
-      next
-  else
-    stop('first argument expects a four digit year value')
-      
-    if (num_var %!in% c('AGEP','GASP','GRPIP','JWAP','JWDP','JWMNP'))
-      return('PWGTP')
-    else 
-      return(num_var, 'PWGTP')
-    if (cat_var %in% c('FER','HHL','HISPEED','JWTRNS','SCH','SCHL','SEX'))
-        return(as.factor(cat_var))
-      else
-        stop('please specify a categorical variable as at least one of the following: FER, HHL, HISPEED, JWTRNS, SCH, SCHL, SEX')
-    if (geo_level %in% c('All','Region','Division','State'))
-      return(geo_level)
-    else
-      stop('please specify a geography level as one of the following: All, Region, Division, State')
-
+numeric_vars <- c('AGEP','GASP','GRPIP','JWAP', 'JWDP','JWMNP')
+category_vars <- c('FER','HHL','HISPEED', 'JWTRNS','SCH','SCHL','SEX')
+geo_vars <- c('All', 'Region', 'Division', 'State')
+variable_combo <- paste(c(numeric_vars, category_vars), collapse = ',')
+user_input <- function(x=2022,
+                       y=c("AGEP"),
+                       z=c("SEX"),
+                       geo_lvl="All",
+                       specs=NULL) {
+  if (!all(x %in% c(2010:2022))) {
+    stop('expected a number')
+  }
+  if (!all(y %in% numeric_vars)) {
+    stop('expected a numeric variable from the following list: AGEP, GASP, GRPIP, JWAP, JWDP, JWMNP')
+  }
+  if (!'PWGTP' %in% numeric_vars) {
+    numeric_vars <- c(numeric_vars, 'PWGTP')
+  }
+  if (!all(z %in% category_vars)) {
+    stop('expected a categorical variable from the following list: FER, HHL, HISPEED, JWTRNS, SCH, SCHL, SEX')
+  }
+  if (!geo_lvl %in% geo_vars){
+    stop('expected a geographical level from the following list: All, Region, Division, State')
+  }
+  url_base <- paste0('https://api.census.gov/data/', x, '/acs/acs1/pums?get=', variable_combo)
+  
+  if (!is.null(specs)) {
+    filter <- paste0('&', names(specs), '=', specs)
+    url_base <- paste0(url_base, paste(filter, collapse = ''))
+  }
+  response <- GET(url_base)
+  
+  output_tibble <- parsing_fun(response)
+  
+  for (i in numeric_vars) {
+    if (i %in% names(output_tibble)) {
+      output_tibble[[i]] <- as.numeric(output_tibble[[i]])
+    }
+  }
+  
+  time_vars <- intersect(numeric_vars, c('JWAP','JWDP'))
+  
+  for (i in time_vars) {
+    if (i %in% names(output_tibble)) {
+      output_tibble[[i]] <- as.numeric(output_tibble[[i]])+0.5 #halfway point
+    }
+  }
+  
+  for (i in category_vars) {
+    if (i %in% names(output_tibble)) {
+      output_tibble[[i]] <- as.factor(output_tibble[[i]])
+    }
+  }
+  
+  output_tibble$Year <- x
+  
+  return(output_tibble)  
 }
+
+```
+
+```{r}
+default_tibble <- user_input()
+default_tibble
 ```
