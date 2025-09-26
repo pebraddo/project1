@@ -4,22 +4,35 @@ format: html
 editor: visual
 ---
 
-```{r}
+## A Quick Intro
+
+The following document explores the extraction of the *Public Use Microdata Sample Census data* using the API that gives person-level data between, and including, the years 2010 and 2022.
+
+## Now for the code to query this data
+
+We know we want to use the `tidyverse` package, as we've established in the ST 558 course that tibbles are easy to manipulate and format. Let's also load in the `tidycensus` package, which works with this Census API. The `jsonlite` package helps to parse JSON data. The `httr` package is used to effectively deal with URLs.
+
+```{r loading initial libraries}
 library(tidyverse)
 library(tidycensus)
+library(jsonlite)
+library(httr)
 ```
 
-```{r}
+Now that we have the libraries loaded, we can use the example function call and the `httr` package to 'GET' the structure of the example page.
+
+```{r investigating the url}
 url_census <- 'api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24'
 census_info <- httr::GET(url_census)
 str(census_info, max.level = 1)
 ```
 
-```{r}
-library(jsonlite)
-library(httr)
+Let's try creating a *helper* function, `parsing_fun`, that takes what we found from the `GET()` function and turn it into a nicely formatted tibble. We need to do some corrections with formatting, as the column names weren't initially recognized. The data we are interested in is in the `content` portion of `census_info`. The `str()` function above gives a good visual for this.
+
+```{r helper function}
+
 parsing_fun <- function(response) {
-  parsed <- fromJSON(rawToChar(census_info$content))
+  parsed <- fromJSON(rawToChar(response$content))
   content_info <- as_tibble(parsed)
   colnames(content_info) <- content_info[1,]
   content_info <- content_info[-1,]
@@ -27,12 +40,24 @@ parsing_fun <- function(response) {
 }
 ```
 
-```{r}
+Now, we can begin the actual creation of the function. First, let's specify the options for a few of the function arguments we will use.
+
+```{r specify the options}
 numeric_vars <- c('AGEP','GASP','GRPIP','JWAP', 'JWDP','JWMNP')
 category_vars <- c('FER','HHL','HISPEED', 'JWTRNS','SCH','SCHL','SEX')
 geo_vars <- c('All', 'Region', 'Division', 'State')
-variable_combo <- paste(c(numeric_vars, category_vars), collapse = ',')
-user_input <- function(x=2022,
+```
+
+Second, we can create the single year function, `user_input`, which has default values for the first four arguments and the fifth argument is optional. We begin with the year input, where we need to ensure a valid year was entered, then the numeric, category, and geography levels are validated. The numeric variables are then converted to numeric or time values, depending on the attribute. The categorical variables are turns in to factors.
+
+Users can specify specific Regions, Divisions, or States in the fifth (optional) argument.
+
+Finally, the variable 'Year' is added to the output_tibble to specify which year the observation data came from. This is important when querying multiple years in the next part.
+
+```{r single year function}
+
+
+user_input <- function(x=c(2022),
                        y=c("AGEP"),
                        z=c("SEX"),
                        geo_lvl="All",
@@ -40,18 +65,21 @@ user_input <- function(x=2022,
   if (!all(x %in% c(2010:2022))) {
     stop('expected a number')
   }
+  
   if (!all(y %in% numeric_vars)) {
     stop('expected a numeric variable from the following list: AGEP, GASP, GRPIP, JWAP, JWDP, JWMNP')
   }
-  if (!'PWGTP' %in% numeric_vars) {
-    numeric_vars <- c(numeric_vars, 'PWGTP')
-  }
+  number_vars_specified <- unique(c(y, "PWGTP"))
+
   if (!all(z %in% category_vars)) {
     stop('expected a categorical variable from the following list: FER, HHL, HISPEED, JWTRNS, SCH, SCHL, SEX')
   }
+  category_vars_specified <- z
+  variable_combo <- paste(c(number_vars_specified, category_vars_specified), collapse = ',')
   if (!geo_lvl %in% geo_vars){
     stop('expected a geographical level from the following list: All, Region, Division, State')
   }
+  
   url_base <- paste0('https://api.census.gov/data/', x, '/acs/acs1/pums?get=', variable_combo)
   
   if (!is.null(specs)) {
@@ -89,7 +117,42 @@ user_input <- function(x=2022,
 
 ```
 
-```{r}
+Let's test how this works using a 'Default' input, where no arguments have specific values changed from the default.
+
+```{r default testing}
 default_tibble <- user_input()
 default_tibble
+```
+
+The following is the testing of the single year function where the user specified 2021 as the year, AGEP and GRPIP as the numeric variables, and SEX and SCHL as the categorical variables. Here, the geogrphy level is not specified, so it defaults to a value of 'All.'
+
+```{r user input testing}
+user_input(x = 2021,
+           y = c("AGEP", "GRPIP"),
+           z = c("SEX", "SCHL"))  
+```
+
+Looks good! Now, we can wrap this single year function into a `multi_year_user_input` function. The user can specify multiple years, instead of just one, and this data is combined into a tibble.
+
+```{r multi year function}
+multi_year_user_input <- function(x_multi = 2022,
+                                  y = c('AGEP'),
+                                  z = c('SEX'),
+                                  geo_lvl = 'All',
+                                  specs = NULL) {
+  map_dfr(x_multi, ~ user_input(x = .x,
+                                y = y,
+                                z = z,
+                                geo_lvl = geo_lvl,
+                                specs = specs))
+}
+                             
+```
+
+Now, we can test this multi-year function with 2021 and 2022 data and compare it to the single year results from before of the same variables, but looking at just 2021.
+
+```{r multi year testing}
+multi_year_user_input(x_multi = c(2021, 2022),
+                      y = c("AGEP", "GRPIP"),
+                      z = c("SEX", "SCHL"))  
 ```

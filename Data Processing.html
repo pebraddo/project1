@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.5.57" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
 
 <title>Data Processing</title>
@@ -56,22 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<!-- htmldependencies:E3FAD763 -->
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -103,14 +90,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-search-results"></div>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <div id="quarto-toc-target"></div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -134,14 +123,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <section id="a-quick-intro" class="level2">
-<h2 class="anchored" data-anchor-id="a-quick-intro">A Quick Intro</h2>
+<h2>A Quick Intro</h2>
 <p>The following document explores the extraction of the <em>Public Use Microdata Sample Census data</em> using the API that gives person-level data between, and including, the years 2010 and 2022.</p>
 </section>
 <section id="now-for-the-code-to-query-this-data" class="level2">
-<h2 class="anchored" data-anchor-id="now-for-the-code-to-query-this-data">Now for the code to query this data</h2>
+<h2>Now for the code to query this data</h2>
 <p>We know we want to use the <code>tidyverse</code> package, as we’ve established in the ST 558 course that tibbles are easy to manipulate and format. Let’s also load in the <code>tidycensus</code> package, which works with this Census API. The <code>jsonlite</code> package helps to parse JSON data. The <code>httr</code> package is used to effectively deal with URLs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -154,89 +143,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
-Attaching package: 'jsonlite'
+Attaching package: &#39;jsonlite&#39;
 
-The following object is masked from 'package:purrr':
+The following object is masked from &#39;package:purrr&#39;:
 
     flatten</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span></code></pre></div>
 </div>
 <p>Now that we have the libraries loaded, we can use the example function call and the <code>httr</code> package to ‘GET’ the structure of the example page.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url_census <span class="ot">&lt;-</span> <span class="st">'api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&amp;SCHL=24'</span></span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url_census <span class="ot">&lt;-</span> <span class="st">&#39;api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&amp;SCHL=24&#39;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>census_info <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">GET</span>(url_census)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(census_info, <span class="at">max.level =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(census_info, <span class="at">max.level =</span> <span class="dv">1</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 10
- $ url        : chr "https://api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&amp;SCHL=24"
+ $ url        : chr &quot;https://api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&amp;SCHL=24&quot;
  $ status_code: int 200
  $ headers    :List of 12
-  ..- attr(*, "class")= chr [1:2] "insensitive" "list"
+  ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;insensitive&quot; &quot;list&quot;
  $ all_headers:List of 2
- $ cookies    :'data.frame':    1 obs. of  7 variables:
+ $ cookies    :&#39;data.frame&#39;:    1 obs. of  7 variables:
  $ content    : raw [1:937508] 5b 5b 22 53 ...
- $ date       : POSIXct[1:1], format: "2025-09-26 18:36:16"
+ $ date       : POSIXct[1:1], format: &quot;2025-09-26 18:36:16&quot;
  $ times      : Named num [1:6] 0.0633 0.0127 0.0559 0.121 0.38 ...
-  ..- attr(*, "names")= chr [1:6] "redirect" "namelookup" "connect" "pretransfer" ...
+  ..- attr(*, &quot;names&quot;)= chr [1:6] &quot;redirect&quot; &quot;namelookup&quot; &quot;connect&quot; &quot;pretransfer&quot; ...
  $ request    :List of 7
-  ..- attr(*, "class")= chr "request"
- $ handle     :Class 'curl_handle' &lt;externalptr&gt; 
- - attr(*, "class")= chr "response"</code></pre>
+  ..- attr(*, &quot;class&quot;)= chr &quot;request&quot;
+ $ handle     :Class &#39;curl_handle&#39; &lt;externalptr&gt; 
+ - attr(*, &quot;class&quot;)= chr &quot;response&quot;</code></pre>
 </div>
 </div>
 <p>Let’s try creating a <em>helper</em> function, <code>parsing_fun</code>, that takes what we found from the <code>GET()</code> function and turn it into a nicely formatted tibble. We need to do some corrections with formatting, as the column names weren’t initially recognized. The data we are interested in is in the <code>content</code> portion of <code>census_info</code>. The <code>str()</code> function above gives a good visual for this.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>parsing_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(response) {</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>parsing_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(response) {</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  parsed <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">rawToChar</span>(response<span class="sc">$</span>content))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  content_info <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(parsed)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(content_info) <span class="ot">&lt;-</span> content_info[<span class="dv">1</span>,]</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  content_info <span class="ot">&lt;-</span> content_info[<span class="sc">-</span><span class="dv">1</span>,]</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  content_info</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <p>Now, we can begin the actual creation of the function. First, let’s specify the options for a few of the function arguments we will use.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>numeric_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'AGEP'</span>,<span class="st">'GASP'</span>,<span class="st">'GRPIP'</span>,<span class="st">'JWAP'</span>, <span class="st">'JWDP'</span>,<span class="st">'JWMNP'</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>category_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'FER'</span>,<span class="st">'HHL'</span>,<span class="st">'HISPEED'</span>, <span class="st">'JWTRNS'</span>,<span class="st">'SCH'</span>,<span class="st">'SCHL'</span>,<span class="st">'SEX'</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>geo_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'All'</span>, <span class="st">'Region'</span>, <span class="st">'Division'</span>, <span class="st">'State'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>numeric_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;AGEP&#39;</span>,<span class="st">&#39;GASP&#39;</span>,<span class="st">&#39;GRPIP&#39;</span>,<span class="st">&#39;JWAP&#39;</span>, <span class="st">&#39;JWDP&#39;</span>,<span class="st">&#39;JWMNP&#39;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>category_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;FER&#39;</span>,<span class="st">&#39;HHL&#39;</span>,<span class="st">&#39;HISPEED&#39;</span>, <span class="st">&#39;JWTRNS&#39;</span>,<span class="st">&#39;SCH&#39;</span>,<span class="st">&#39;SCHL&#39;</span>,<span class="st">&#39;SEX&#39;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>geo_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;All&#39;</span>, <span class="st">&#39;Region&#39;</span>, <span class="st">&#39;Division&#39;</span>, <span class="st">&#39;State&#39;</span>)</span></code></pre></div>
 </div>
 <p>Second, we can create the single year function, <code>user_input</code>, which has default values for the first four arguments and the fifth argument is optional. We begin with the year input, where we need to ensure a valid year was entered, then the numeric, category, and geography levels are validated. The numeric variables are then converted to numeric or time values, depending on the attribute. The categorical variables are turns in to factors.</p>
 <p>Users can specify specific Regions, Divisions, or States in the fifth (optional) argument.</p>
 <p>Finally, the variable ‘Year’ is added to the output_tibble to specify which year the observation data came from. This is important when querying multiple years in the next part.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>user_input <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="dv">2022</span>),</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y=</span><span class="fu">c</span>(<span class="st">"AGEP"</span>),</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">z=</span><span class="fu">c</span>(<span class="st">"SEX"</span>),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">geo_lvl=</span><span class="st">"All"</span>,</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>user_input <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="dv">2022</span>),</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y=</span><span class="fu">c</span>(<span class="st">&quot;AGEP&quot;</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">z=</span><span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">geo_lvl=</span><span class="st">&quot;All&quot;</span>,</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">specs=</span><span class="cn">NULL</span>) {</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(x <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2010</span><span class="sc">:</span><span class="dv">2022</span>))) {</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">'expected a number'</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&#39;expected a number&#39;</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(y <span class="sc">%in%</span> numeric_vars)) {</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">'expected a numeric variable from the following list: AGEP, GASP, GRPIP, JWAP, JWDP, JWMNP'</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&#39;expected a numeric variable from the following list: AGEP, GASP, GRPIP, JWAP, JWDP, JWMNP&#39;</span>)</span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  number_vars_specified <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(y, <span class="st">"PWGTP"</span>))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  number_vars_specified <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(y, <span class="st">&quot;PWGTP&quot;</span>))</span>
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(z <span class="sc">%in%</span> category_vars)) {</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">'expected a categorical variable from the following list: FER, HHL, HISPEED, JWTRNS, SCH, SCHL, SEX'</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&#39;expected a categorical variable from the following list: FER, HHL, HISPEED, JWTRNS, SCH, SCHL, SEX&#39;</span>)</span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  category_vars_specified <span class="ot">&lt;-</span> z</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  variable_combo <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">c</span>(number_vars_specified, category_vars_specified), <span class="at">collapse =</span> <span class="st">','</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  variable_combo <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">c</span>(number_vars_specified, category_vars_specified), <span class="at">collapse =</span> <span class="st">&#39;,&#39;</span>)</span>
 <span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>geo_lvl <span class="sc">%in%</span> geo_vars){</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">'expected a geographical level from the following list: All, Region, Division, State'</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&#39;expected a geographical level from the following list: All, Region, Division, State&#39;</span>)</span>
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  url_base <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'https://api.census.gov/data/'</span>, x, <span class="st">'/acs/acs1/pums?get='</span>, variable_combo)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  url_base <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&#39;https://api.census.gov/data/&#39;</span>, x, <span class="st">&#39;/acs/acs1/pums?get=&#39;</span>, variable_combo)</span>
 <span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(specs)) {</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    filter <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'&amp;'</span>, <span class="fu">names</span>(specs), <span class="st">'='</span>, specs)</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    url_base <span class="ot">&lt;-</span> <span class="fu">paste0</span>(url_base, <span class="fu">paste</span>(filter, <span class="at">collapse =</span> <span class="st">''</span>))</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    filter <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&#39;&amp;&#39;</span>, <span class="fu">names</span>(specs), <span class="st">&#39;=&#39;</span>, specs)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    url_base <span class="ot">&lt;-</span> <span class="fu">paste0</span>(url_base, <span class="fu">paste</span>(filter, <span class="at">collapse =</span> <span class="st">&#39;&#39;</span>))</span>
 <span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  response <span class="ot">&lt;-</span> <span class="fu">GET</span>(url_base)</span>
 <span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -248,7 +237,7 @@ The following object is masked from 'package:purrr':
 <span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  time_vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(numeric_vars, <span class="fu">c</span>(<span class="st">'JWAP'</span>,<span class="st">'JWDP'</span>))</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  time_vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(numeric_vars, <span class="fu">c</span>(<span class="st">&#39;JWAP&#39;</span>,<span class="st">&#39;JWDP&#39;</span>))</span>
 <span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> time_vars) {</span>
 <span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i <span class="sc">%in%</span> <span class="fu">names</span>(output_tibble)) {</span>
@@ -265,17 +254,17 @@ The following object is masked from 'package:purrr':
 <span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>  output_tibble<span class="sc">$</span>Year <span class="ot">&lt;-</span> x</span>
 <span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(output_tibble)  </span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <p>Let’s test how this works using a ‘Default’ input, where no arguments have specific values changed from the default.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>default_tibble <span class="ot">&lt;-</span> <span class="fu">user_input</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>default_tibble <span class="ot">&lt;-</span> <span class="fu">user_input</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if
 `.name_repair` is omitted as of tibble 2.0.0.
 ℹ Using compatibility `.name_repair`.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>default_tibble</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>default_tibble</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3,373,378 × 4
     AGEP PWGTP SEX    Year
@@ -295,9 +284,9 @@ The following object is masked from 'package:purrr':
 </div>
 <p>The following is the testing of the single year function where the user specified 2021 as the year, AGEP and GRPIP as the numeric variables, and SEX and SCHL as the categorical variables. Here, the geogrphy level is not specified, so it defaults to a value of ‘All.’</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">user_input</span>(<span class="at">x =</span> <span class="dv">2021</span>,</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"AGEP"</span>, <span class="st">"GRPIP"</span>),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">z =</span> <span class="fu">c</span>(<span class="st">"SEX"</span>, <span class="st">"SCHL"</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">user_input</span>(<span class="at">x =</span> <span class="dv">2021</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="fu">c</span>(<span class="st">&quot;AGEP&quot;</span>, <span class="st">&quot;GRPIP&quot;</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">z =</span> <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;SCHL&quot;</span>))  </span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3,252,599 × 6
     AGEP GRPIP PWGTP SEX   SCHL   Year
@@ -317,23 +306,23 @@ The following object is masked from 'package:purrr':
 </div>
 <p>Looks good! Now, we can wrap this single year function into a <code>multi_year_user_input</code> function. The user can specify multiple years, instead of just one, and this data is combined into a tibble.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>multi_year_user_input <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x_multi =</span> <span class="dv">2022</span>,</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">y =</span> <span class="fu">c</span>(<span class="st">'AGEP'</span>),</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">z =</span> <span class="fu">c</span>(<span class="st">'SEX'</span>),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">geo_lvl =</span> <span class="st">'All'</span>,</span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>multi_year_user_input <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x_multi =</span> <span class="dv">2022</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">y =</span> <span class="fu">c</span>(<span class="st">&#39;AGEP&#39;</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">z =</span> <span class="fu">c</span>(<span class="st">&#39;SEX&#39;</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">geo_lvl =</span> <span class="st">&#39;All&#39;</span>,</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">specs =</span> <span class="cn">NULL</span>) {</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(x_multi, <span class="sc">~</span> <span class="fu">user_input</span>(<span class="at">x =</span> .x,</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">y =</span> y,</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                                <span class="at">z =</span> z,</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                                <span class="at">geo_lvl =</span> geo_lvl,</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                                <span class="at">specs =</span> specs))</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <p>Now, we can test this multi-year function with 2021 and 2022 data and compare it to the single year results from before of the same variables, but looking at just 2021.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">multi_year_user_input</span>(<span class="at">x_multi =</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>),</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"AGEP"</span>, <span class="st">"GRPIP"</span>),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">z =</span> <span class="fu">c</span>(<span class="st">"SEX"</span>, <span class="st">"SCHL"</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">multi_year_user_input</span>(<span class="at">x_multi =</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">2022</span>),</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="fu">c</span>(<span class="st">&quot;AGEP&quot;</span>, <span class="st">&quot;GRPIP&quot;</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">z =</span> <span class="fu">c</span>(<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;SCHL&quot;</span>))  </span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6,625,977 × 6
     AGEP GRPIP PWGTP SEX   SCHL   Year
@@ -351,12 +340,16 @@ The following object is masked from 'package:purrr':
 # ℹ 6,625,967 more rows</code></pre>
 </div>
 </div>
-
-
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar-title">Data Processing</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-navbar-title">Data Processing</span></p>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-metatitle">Data Processing</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-twittercardtitle">Data Processing</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-ogcardtitle">Data Processing</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-twittercarddesc"></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-ogcardddesc"></span></p>
+</div>
 </section>
 
 </main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+<script id = "quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -778,7 +771,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 </div> <!-- /content -->
 
+</body>
 
-
-
-</body></html>
+</html>
