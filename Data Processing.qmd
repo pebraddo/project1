@@ -1,5 +1,5 @@
 ---
-title: "Data Processing"
+title: "PUMS Census Data Processing in R"
 format: html
 editor: visual
 ---
@@ -8,7 +8,7 @@ editor: visual
 
 The following document explores the extraction of the *Public Use Microdata Sample Census data* using the API that gives person-level data between, and including, the years 2010 and 2022.
 
-## Now for the code to query this data
+## Now for the code to query this data.
 
 We know we want to use the `tidyverse` package, as we've established in the ST 558 course that tibbles are easy to manipulate and format. Let's also load in the `tidycensus` package, which works with this Census API. The `jsonlite` package helps to parse JSON data. The `httr` package is used to effectively deal with URLs.
 
@@ -22,7 +22,7 @@ library(httr)
 Now that we have the libraries loaded, we can use the example function call and the `httr` package to 'GET' the structure of the example page.
 
 ```{r investigating the url}
-url_census <- 'api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24'
+url_census <- 'https://api.census.gov/data/2022/acs/acs1/pums?get=SEX,PWGTP,MAR&SCHL=24'
 census_info <- httr::GET(url_census)
 str(census_info, max.level = 1)
 ```
@@ -90,6 +90,8 @@ user_input <- function(x=c(2022),
   
   output_tibble <- parsing_fun(response)
   
+  output_tibble$PWGTP <- as.numeric(output_tibble$PWGTP) # Make sure PWGTP is read as numeric.
+  
   for (i in numeric_vars) {
     if (i %in% names(output_tibble)) {
       output_tibble[[i]] <- as.numeric(output_tibble[[i]])
@@ -112,6 +114,8 @@ user_input <- function(x=c(2022),
   
   output_tibble$Year <- x
   
+  class(output_tibble) <- c("census", class(output_tibble)) # Add a class for "census".
+  
   return(output_tibble)  
 }
 
@@ -124,7 +128,7 @@ default_tibble <- user_input()
 default_tibble
 ```
 
-The following is the testing of the single year function where the user specified 2021 as the year, AGEP and GRPIP as the numeric variables, and SEX and SCHL as the categorical variables. Here, the geogrphy level is not specified, so it defaults to a value of 'All.'
+The following is the testing of the single year function where the user specified 2021 as the year, AGEP and GRPIP as the numeric variables, and SEX and SCHL as the categorical variables. Here, the geography level is not specified, so it defaults to a value of 'All.'
 
 ```{r user input testing}
 user_input(x = 2021,
@@ -155,4 +159,59 @@ Now, we can test this multi-year function with 2021 and 2022 data and compare it
 multi_year_user_input(x_multi = c(2021, 2022),
                       y = c("AGEP", "GRPIP"),
                       z = c("SEX", "SCHL"))  
+```
+
+## Writing a Generic Function for Summarizing
+
+Next, we can begin writing a generic summary function. For the `census` summary method, let’s write a function that produces means and standard deviations for our numeric variable(s) and counts for our categorical variable(s). This function will take three arguments: the tibble with class census, the numeric variable(s) to summarize, and the categorical variable(s) to summarize. The `PWGTP` (weight) variable is the only numeric variable that the user won't be able to summarize, by default.
+
+```{r summary function}
+
+summary.census <- function(object, numeric_vars = NULL, category_vars = NULL) {
+  # Set our default numeric (except PWGTP) and categorical variables for summarizing.
+  all_numeric <- setdiff(names(object)[sapply(object, is.numeric)], "PWGTP")
+  all_categorical <- names(object)[sapply(object, is.factor)]
+  
+  # Use the specified variable from the user or use the default if NULL response.
+  num_var <- if (is.null(numeric_vars)) all_numeric else intersect(numeric_vars, all_numeric)
+  cat_var <- if (is.null(category_vars)) all_categorical else intersect(category_vars, all_categorical)
+
+  weight <- as.numeric(object$PWGTP)
+
+  results <- list()
+  
+  # Create the numeric summary.
+  for (var in num_var) {
+    x <- as.numeric(object[[var]])
+    sample_mean <- sum(x * weight, na.rm = TRUE) / sum(weight, na.rm = TRUE)
+    std_dev <- sqrt(sum((x^2) * weight, na.rm = TRUE) / sum(weight, na.rm = TRUE) - sample_mean^2)
+
+    results[[paste0("Mean_", var)]] <- sample_mean
+    results[[paste0("SD_", var)]] <- std_dev
+  }
+  # Create the categorical summary.
+  for (var in cat_var) {
+    freq <- object %>%
+      group_by(.data[[var]]) %>%
+      summarise(weighted_count = sum(PWGTP)) %>%
+      arrange(desc(weighted_count))
+
+    results[[paste0("Counts_", var)]] <- freq
+  }
+
+  return(results)
+}
+
+```
+
+```{r}
+# Initial function test.
+
+census_data <- user_input(x = 2022,
+                          y = c("AGEP", "GRPIP"),
+                          z = c("SEX", "SCHL"))
+
+summary(census_data)
+
+# Remove mean and sd for 'Year'
 ```
