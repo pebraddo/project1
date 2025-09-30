@@ -13,6 +13,7 @@ The following document explores the extraction of the *Public Use Microdata Samp
 We know we want to use the `tidyverse` package, as we've established in the ST 558 course that tibbles are easy to manipulate and format. Let's also load in the `tidycensus` package, which works with this Census API. The `jsonlite` package helps to parse JSON data. The `httr` package is used to effectively deal with URLs.
 
 ```{r loading initial libraries}
+#| warning: FALSE
 library(tidyverse)
 library(tidycensus)
 library(jsonlite)
@@ -169,7 +170,7 @@ Next, we can begin writing a generic summary function. For the `census` summary 
 
 summary.census <- function(object, numeric_vars = NULL, category_vars = NULL) {
   # Set our default numeric (except PWGTP) and categorical variables for summarizing.
-  all_numeric <- setdiff(names(object)[sapply(object, is.numeric)], "PWGTP")
+  all_numeric <- setdiff(names(object)[sapply(object, is.numeric)], c("PWGTP", "Year")) # Also exclude 'Year' from summarizing.
   all_categorical <- names(object)[sapply(object, is.factor)]
   
   # Use the specified variable from the user or use the default if NULL response.
@@ -204,14 +205,53 @@ summary.census <- function(object, numeric_vars = NULL, category_vars = NULL) {
 
 ```
 
-```{r}
-# Initial function test.
+Here is a test of our summary function.
 
+```{r summary function test}
 census_data <- user_input(x = 2022,
                           y = c("AGEP", "GRPIP"),
                           z = c("SEX", "SCHL"))
 
 summary(census_data)
-
-# Remove mean and sd for 'Year'
 ```
+
+Now, let's create a generic `plot()` function for a census class tibble. The user will need to specify one categorical variable and one numeric variable for plotting purposes.
+
+```{r plot libraries}
+#| warning: FALSE
+library(quantreg)
+library(ggplot2)
+```
+
+```{r census plot}
+plot.census <- function(object, cat_var, num_var) {
+  
+  # Potential errors. Be sure that both variables exist in the data.
+  if (!(cat_var %in% names(object))) {
+    stop(paste0("Categorical variable '", cat_var, "' not found in the data."))
+  }
+  if (!(num_var %in% names(object))) {
+    stop(paste0("Numeric variable '", num_var, "' not found in the data."))
+  }
+
+  # Be sure the categorical variable is a factor.
+  if (!is.factor(object[[cat_var]])) {
+    stop(paste0("Variable '", cat_var, "' is not a factor (categorical)."))
+  }
+
+  # Be sure the numeric variable is numeric.
+  if (!is.numeric(object[[num_var]])) {
+    stop(paste0("Variable '", num_var, "' is not numeric."))
+  }
+
+  ggplot(census_data,
+         aes(x = get(cat_var), y = get(num_var), weight = PWGTP)) + 
+    geom_boxplot()
+}
+```
+
+We will use the same `census_data` example that we used to test our `summary()` function and now apply it to our generic `plot()` function.
+```{r}
+# plot(census_data, cat_var = "SEX", num_var = "AGEP")
+```
+
