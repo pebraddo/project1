@@ -246,12 +246,15 @@ plot.census <- function(object, cat_var, num_var) {
 
   ggplot(census_data,
          aes(x = get(cat_var), y = get(num_var), weight = PWGTP)) + 
-    geom_boxplot()
+    geom_boxplot() +
+    labs(x = cat_var, y = num_var)
 }
 ```
 
-We will use the same `census_data` example that we used to test our `summary()` function and now apply it to our generic `plot()` function.
+We will use the same `census_data` example that we used to test our `summary()` function and now apply it to our generic `plot()` function. The code chunk below will plot the SEX variable against the AGEP variable, as specified by the user. In this example, we are using `census_data', where the user has previously specified the year 2022.
 ```{r}
-# plot(census_data, cat_var = "SEX", num_var = "AGEP")
+plot(census_data, cat_var = "SEX", num_var = "AGEP")
 ```
+
+As we can see in the box plot, according to 2022 census_data, men (1) and women (2) seem to have very similar age distributions. However, the women in this sample have a slightly higher age range, which could point towards the fact that women often have a slightly higher life expectancy than the men in this sampling.
 
