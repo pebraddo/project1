@@ -251,7 +251,7 @@ plot.census <- function(object, cat_var, num_var) {
 ```
 
 We will use the same `census_data` example that we used to test our `summary()` function and now apply it to our generic `plot()` function.
-```{r}
-# plot(census_data, cat_var = "SEX", num_var = "AGEP")
-```
 
+```{r}
+plot(census_data, cat_var = "SEX", num_var = "AGEP")
+```
