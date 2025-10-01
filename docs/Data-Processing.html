@@ -160,8 +160,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  $ all_headers:List of 1
  $ cookies    :'data.frame':    1 obs. of  7 variables:
  $ content    : raw [1:937508] 5b 5b 22 53 ...
- $ date       : POSIXct[1:1], format: "2025-09-30 19:53:23"
- $ times      : Named num [1:6] 0 0.128 0.147 0.245 0.618 ...
+ $ date       : POSIXct[1:1], format: "2025-10-01 01:57:15"
+ $ times      : Named num [1:6] 0 0.055 0.0749 0.1259 0.336 ...
   ..- attr(*, "names")= chr [1:6] "redirect" "namelookup" "connect" "pretransfer" ...
  $ request    :List of 7
   ..- attr(*, "class")= chr "request"
@@ -447,20 +447,22 @@ $Counts_SCHL
 <span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(census_data,</span>
 <span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">get</span>(cat_var), <span class="at">y =</span> <span class="fu">get</span>(num_var), <span class="at">weight =</span> PWGTP)) <span class="sc">+</span> </span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>()</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> cat_var, <span class="at">y =</span> num_var)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We will use the same <code>census_data</code> example that we used to test our <code>summary()</code> function and now apply it to our generic <code>plot()</code> function.</p>
+<p>We will use the same <code>census_data</code> example that we used to test our <code>summary()</code> function and now apply it to our generic <code>plot()</code> function. The code chunk below will plot the SEX variable against the AGEP variable, as specified by the user. In this example, we are using `census_data’, where the user has previously specified the year 2022.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(census_data, <span class="at">cat_var =</span> <span class="st">"SEX"</span>, <span class="at">num_var =</span> <span class="st">"AGEP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Data-Processing_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Data-Processing_files/figure-html/example plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>As we can see in the box plot, according to 2022 census_data, men (1) and women (2) seem to have very similar age distributions. However, the women in this sample have a slightly higher age range, which could point towards the fact that women often have a slightly higher life expectancy than the men in this sampling.</p>
 
 
 </section>
